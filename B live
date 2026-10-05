@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#050812">
+    <meta name="description" content="B LIVE — Official updates, releases and live moments from BELLORA ENTERTAINMENT and VENOMDOLL.">
+
+    <title>B LIVE — Official BELLORA Updates</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #050812;
+            --card: #0b1020;
+            --card2: #10172a;
+            --text: #f5f7ff;
+            --muted: #9da7bd;
+            --blue: #4da3ff;
+            --blue2: #72c7ff;
+            --line: rgba(255,255,255,0.09);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(circle at 80% 5%, rgba(40,120,255,0.15), transparent 28%),
+                radial-gradient(circle at 10% 40%, rgba(0,80,180,0.08), transparent 30%),
+                var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        .container {
+            width: min(1100px, 92%);
+            margin: auto;
+        }
+
+        /* NAVIGATION */
+
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(18px);
+            background: rgba(5,8,18,0.82);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .nav-inner {
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            color: var(--blue);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 22px;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .nav-links a:hover {
+            color: white;
+        }
+
+        .nav-live {
+            background: var(--blue);
+            color: #03101f;
+            padding: 9px 15px;
+            border-radius: 999px;
+            font-weight: 800;
+        }
+
+        .menu-button {
+            display: none;
+            background: none;
+            border: 0;
+            color: white;
+            font-size: 1.6rem;
+            cursor: pointer;
+        }
+
+        /* HERO */
+
+        .hero {
+            min-height: 76vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            padding: 90px 0;
+            max-width: 760px;
+        }
+
+        .eyebrow {
+            color: var(--blue2);
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 {
+            font-size: clamp(3.4rem, 10vw, 7rem);
+            line-height: 0.9;
+            letter-spacing: -4px;
+        }
+
+        .hero h1 span {
+            color: transparent;
+            -webkit-text-stroke: 1px #dce9ff;
+        }
+
+        .hero p {
+            margin-top: 28px;
+            max-width: 600px;
+            color: var(--muted);
+            font-size: 1.05rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .primary-button,
+        .secondary-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 13px 20px;
+            border-radius: 10px;
+            font-weight: 800;
+        }
+
+        .primary-button {
+            background: var(--blue);
+            color: #03101f;
+        }
+
+        .secondary-button {
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.04);
+        }
+
+        /* SECTIONS */
+
+        section {
+            padding: 80px 0;
+        }
+
+        .section-heading {
+            margin-bottom: 30px;
+        }
+
+        .section-heading h2 {
+            font-size: clamp(2rem, 6vw, 3.4rem);
+            line-height: 1;
+        }
+
+        .section-heading p {
+            color: var(--muted);
+            margin-top: 10px;
+        }
+
+        /* LIVE */
+
+        .live-card {
+            background:
+                linear-gradient(135deg, rgba(65,150,255,0.18), rgba(255,255,255,0.025)),
+                var(--card);
+            border: 1px solid rgba(80,160,255,0.25);
+            border-radius: 22px;
+            padding: 25px;
+        }
+
+        .live-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .live-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ff3f5f;
+            box-shadow: 0 0 14px rgba(255,63,95,0.8);
+        }
+
+        .live-status {
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        .video-placeholder {
+            min-height: 330px;
+            border-radius: 16px;
+            border: 1px solid var(--line);
+            background:
+                radial-gradient(circle, rgba(70,150,255,0.18), transparent 35%),
+                #03050b;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .play-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: var(--blue);
+            color: #03101f;
+            font-size: 1.5rem;
+            margin-bottom: 18px;
+        }
+
+        .video-placeholder h3 {
+            font-size: 1.4rem;
+        }
+
+        .video-placeholder p {
+            color: var(--muted);
+            margin-top: 5px;
+        }
+
+        .live-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .like-button {
+            cursor: pointer;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.04);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+        }
+
+        .like-button.liked {
+            background: rgba(77,163,255,0.18);
+            border-color: rgba(77,163,255,0.4);
+        }
+
+        /* ANNOUNCEMENTS */
+
+        .announcement-list {
+            display: grid;
+            gap: 18px;
+        }
+
+        .announcement {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 24px;
+        }
+
+        .announcement-date {
+            color: var(--blue2);
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .announcement h3 {
+            margin-top: 9px;
+            font-size: 1.5rem;
+        }
+
+        .announcement p {
+            color: var(--muted);
+            margin-top: 8px;
+        }
+
+        .announcement-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-top: 18px;
+        }
+
+        .read-more {
+            color: var(--blue2);
+            font-weight: 800;
+            font-size: 0.9rem;
+        }
+
+        /* PROFILE */
+
+        .profile-card {
+            display: grid;
+            grid-template-columns: 170px 1fr;
+            gap: 28px;
+            padding: 28px;
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            background: var(--card);
+        }
+
+        .profile-picture {
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 35% 30%, #72c7ff, transparent 18%),
+                linear-gradient(145deg, #152b55, #050812);
+            border: 1px solid rgba(114,199,255,0.35);
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        .profile-info h3 {
+            font-size: 2rem;
+        }
+
+        .profile-role {
+            color: var(--blue2);
+            font-weight: 700;
+        }
+
+        .profile-info p {
+            color: var(--muted);
+            margin-top: 12px;
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 6px 11px;
+            border-radius: 999px;
+            background: rgba(77,163,255,0.1);
+            border: 1px solid rgba(77,163,255,0.2);
+            color: var(--blue2);
+            margin-top: 15px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        /* RELEASES */
+
+        .release-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .release {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            overflow: hidden;
+        }
+
+        .cover {
+            aspect-ratio: 1 / 1;
+            background:
+                radial-gradient(circle at 35% 30%, rgba(100,190,255,0.5), transparent 18%),
+                linear-gradient(145deg, #101d3b, #03050b);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .cover-title {
+            font-size: clamp(2rem, 7vw, 3.5rem);
+            font-weight: 900;
+            letter-spacing: -2px;
+        }
+
+        .release-content {
+            padding: 20px;
+        }
+
+        .release-content h3 {
+            font-size: 1.35rem;
+        }
+
+        .release-content p {
+            color: var(--muted);
+            margin-top: 5px;
+        }
+
+        /* COMMENTS */
+
+        .comments {
+            margin-top: 22px;
+            border-top: 1px solid var(--line);
+            padding-top: 20px;
+        }
+
+        .comments h4 {
+            margin-bottom: 12px;
+        }
+
+        .comment-box {
+            display: flex;
+            gap: 8px;
+        }
+
+        .comment-box input {
+            flex: 1;
+            min-width: 0;
+            padding: 12px 13px;
+            border-radius: 10px;
+            border: 1px solid var(--line);
+            outline: none;
+            background: #070b16;
+            color: white;
+        }
+
+        .comment-box button {
+            border: 0;
+            border-radius: 10px;
+            padding: 0 16px;
+            background: var(--blue);
+            color: #03101f;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .comment {
+            padding: 11px 0;
+            border-bottom: 1px solid var(--line);
+            color: var(--muted);
+        }
+
+        .comment strong {
+            color: white;
+            margin-right: 5px;
+        }
+
+        /* FOOTER */
+
+        footer {
+            border-top: 1px solid var(--line);
+            padding: 35px 0;
+            color: var(--muted);
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-brand {
+            color: white;
+            font-weight: 900;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 760px) {
+
+            .nav-links,
+            .nav-live {
+                display: none;
+            }
+
+            .menu-button {
+                display: block;
+            }
+
+            .nav-links.mobile-open {
+                display: flex;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                padding: 20px;
+                flex-direction: column;
+                background: #070b16;
+                border-bottom: 1px solid var(--line);
+            }
+
+            .hero {
+                min-height: 70vh;
+            }
+
+            .hero h1 {
+                letter-spacing: -2px;
+            }
+
+            section {
+                padding: 60px 0;
+            }
+
+            .profile-card {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-picture {
+                width: 130px;
+                height: 130px;
+            }
+
+            .release-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .video-placeholder {
+                min-height: 240px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+
+<nav>
+    <div class="container nav-inner">
+
+        <a href="#home" class="logo">
+            B <span>LIVE</span>
+        </a>
+
+        <div class="nav-links" id="navLinks">
+            <a href="#home">Home</a>
+            <a href="#announcements">Announcements</a>
+            <a href="#live">LIVE</a>
+            <a href="#profile">VENOMDOLL</a>
+            <a href="#releases">Releases</a>
+        </div>
+
+        <a href="#live" class="nav-live">
+            🔴 LIVE
+        </a>
+
+        <button class="menu-button" id="menuButton" aria-label="Open menu">
+            ☰
+        </button>
+
+    </div>
+</nav>
+
+
+<main>
+
+<!-- HOME -->
+
+<section id="home" class="hero">
+
+    <div class="container">
+
+        <div class="hero-content">
+
+            <div class="eyebrow">
+                BELLORA ENTERTAINMENT
+            </div>
+
+            <h1>
+                B<br>
+                <span>LIVE</span>
+            </h1>
+
+            <p>
+                The official home for announcements, releases,
+                live moments and updates from VENOMDOLL and
+                BELLORA ENTERTAINMENT.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="#announcements" class="primary-button">
+                    Latest Updates →
+                </a>
+
+                <a href="#live" class="secondary-button">
+                    🔴 B LIVE
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- LIVE -->
+
+<section id="live">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <h2>
+                B LIVE
+            </h2>
+
+            <p>
+                Official live sessions and live moments.
+            </p>
+
+        </div>
+
+
+        <div class="live-card">
+
+            <div class="live-header">
+
+                <div class="live-label">
+                    <span class="live-dot"></span>
+                    B LIVE
+                </div>
+
+                <div class="live-status">
+                    No live session right now
+                </div>
+
+            </div>
+
+
+            <div class="video-placeholder">
+
+                <div class="play-icon">
+                    ▶
+                </div>
+
+                <h3>
+                    VENOMDOLL LIVE
+                </h3>
+
+                <p>
+                    The livestream player will appear here
+                    when a live session begins.
+                </p>
+
+            </div>
+
+
+            <div class="live-actions">
+
+                <button class="like-button" data-like="live">
+                    ❤️ <span>0</span>
+                </button>
+
+            </div>
+
+
+            <div class="comments">
+
+                <h4>
+                    Live Chat
+                </h4>
+
+                <div class="comment-box">
+
+                    <input
+                        type="text"
+                        id="liveCommentInput"
+                        placeholder="Write a comment..."
+                        maxlength="200"
+                    >
+
+                    <button id="liveCommentButton">
+                        Post
+                    </button>
+
+                </div>
+
+                <div id="liveComments"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ANNOUNCEMENTS -->
+
+<section id="announcements">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <h2>
+                Official<br>
+                Announcements
+            </h2>
+
+            <p>
+                Official news and updates from BELLORA ENTERTAINMENT.
+            </p>
+
+        </div>
+
+
+        <div class="announcement-list">
+
+
+            <article class="announcement">
+
+                <div class="announcement-date">
+                    Official Announcement
+                </div>
+
+                <h3>
+                    BELLORA ENTERTAINMENT — Official Launch
+                </h3>
+
+                <p>
+                    BELLORA ENTERTAINMENT begins its journey as an
+                    independent creative entertainment company founded
+                    by VENOMDOLL.
+                </p>
+
+                <div class="announcement-footer">
+
+                    <span>
+                        🏢 BELLORA ENTERTAINMENT
+                    </span>
+
+                    <button class="like-button" data-like="announcement1">
+                        ❤️ <span>0</span>
+                    </button>
+
+                </div>
+
+            </article>
+
+
+            <article class="announcement">
+
+                <div class="announcement-date">
+                    Music Update
+                </div>
+
+                <h3>
+                    VENOMDOLL — Faces of Love
+                </h3>
+
+                <p>
+                    Faces of Love is the debut album project from
+                    VENOMDOLL, exploring different faces of love through
+                    a dreamy and emotional musical world.
+                </p>
+
+                <div class="announcement-footer">
+
+                    <span>
+                        🎵 VENOMDOLL
+                    </span>
+
+                    <button class="like-button" data-like="announcement2">
+                        ❤️ <span>0</span>
+                    </button>
+
+                </div>
+
+            </article>
+
+
+            <article class="announcement">
+
+                <div class="announcement-date">
+                    Upcoming Project
+                </div>
+
+                <h3>
+                    VENOMDOLL — Born to Be
+                </h3>
+
+                <p>
+                    Born to Be is an upcoming project built around
+                    rebellion, freedom and self-expression.
+                </p>
+
+                <div class="announcement-footer">
+
+                    <span>
+                        ⚡ Upcoming
+                    </span>
+
+                    <button class="like-button" data-like="announcement3">
+                        ❤️ <span>0</span>
+                    </button>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- PROFILE -->
+
+<section id="profile">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <h2>
+                Artist Profile
+            </h2>
+
+        </div>
+
+
+        <div class="profile-card">
+
+            <div class="profile-picture">
+                VENOM
+            </div>
+
+            <div class="profile-info">
+
+                <h3>
+                    VENOMDOLL
+                </h3>
+
+                <div class="profile-role">
+                    Independent Artist
+                </div>
+
+                <p>
+                    VENOMDOLL is the first art
