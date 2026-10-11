@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>B LIVE Admin | BELLORA ENTERTAINMENT</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 24px 16px; min-height: 100vh;
+      background: #080d19; color: #edf4ff;
+      font-family: Arial, sans-serif;
+    }
+    main { max-width: 650px; margin: auto; }
+    .brand { color: #69b8ff; letter-spacing: 3px; font-size: 13px; }
+    h1 { margin-bottom: 6px; }
+    .muted { color: #9aaac2; font-size: 14px; }
+    .panel {
+      background: #111b2d; border: 1px solid #263b5a;
+      border-radius: 16px; padding: 20px; margin-top: 20px;
+    }
+    label { display: block; margin: 16px 0 7px; font-size: 14px; }
+    input, textarea, select {
+      width: 100%; padding: 12px; border-radius: 9px;
+      border: 1px solid #344763; background: #0a1221;
+      color: white; font: inherit;
+    }
+    textarea { min-height: 130px; resize: vertical; }
+    button {
+      padding: 12px 16px; border: 0; border-radius: 9px;
+      background: #328bff; color: white; font-weight: bold;
+      cursor: pointer; margin-top: 14px;
+    }
+    button:disabled { opacity: .6; }
+    .secondary { background: #293b55; }
+    .item { border-top: 1px solid #293b55; padding: 14px 0; }
+    .item h3 { margin: 0 0 8px; }
+    .item p { white-space: pre-wrap; overflow-wrap: anywhere; }
+    #status { white-space: pre-wrap; overflow-wrap: anywhere; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+<main>
+  <div class="brand">BELLORA ENTERTAINMENT</div>
+  <h1>B LIVE Admin 👑</h1>
+  <p class="muted">Private announcement control room</p>
+
+  <section class="panel" id="loginPanel">
+    <h2>Admin login</h2>
+    <form id="loginForm">
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="username" required>
+      <label for="password">Password</label>
+      <input id="password" type="password"
+        autocomplete="current-password" required>
+      <button id="loginButton" type="submit">Sign in</button>
+    </form>
+  </section>
+
+  <section id="dashboard" hidden>
+    <div class="panel">
+      <p>Signed in to B LIVE Admin</p>
+      <button id="logoutButton" class="secondary">Sign out</button>
+    </div>
+
+    <form id="announcementForm" class="panel">
+      <h2>Create announcement</h2>
+      <label for="title">Announcement title</label>
+      <input id="title" maxlength="120" required>
+
+      <label for="category">Category</label>
+      <select id="category">
+        <option>Official</option>
+        <option>Music Release</option>
+        <option>Event</option>
+        <option>Livestream</option>
+      </select>
+
+      <label for="content">Message</label>
+      <textarea id="content" maxlength="10000" required></textarea>
+
+      <button id="publishButton" type="submit">Publish now</button>
+      <p class="muted">Publishing makes this announcement public wherever
+        the B LIVE website displays announcements from Supabase.</p>
+    </form>
+
+    <div class="panel">
+      <h2>Your published announcements</h2>
+      <div id="announcementList">Loading…</div>
+    </div>
+  </section>
+
+  <p id="status" role="status" aria-live="polite"></p>
+</main>
+
+<script type="module">
+  import { createClient } from
+    "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+  // Replace these two placeholders with your own project details.
+  const SUPABASE_URL = " https://yugszbinzeudfdnxajsx.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_D6Aenr4VRBVST6x61CnwCQ_f_HxWNfe";
+
+  const status = document.getElementById("status");
+  const loginPanel = document.getElementById("loginPanel");
+  const dashboard = document.getElementById("dashboard");
+  const list = document.getElementById("announcementList");
+  const loginButton = document.getElementById("loginButton");
+  const publishButton = document.getElementById("publishButton");
+
+  const configured =
+    SUPABASE_URL.startsWith("https://") &&
+    SUPABASE_KEY.startsWith("sb_publishable_");
+
+  if (!configured) {
+    status.textContent =
+      "Setup needed: enter your Supabase project URL and publishable key in admin.html.";
+  } else {
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    function showStatus(message) {
+      status.textContent = message;
+    }
+
+    async function refresh() {
+      const { data: { session } } = await supabase.auth.getSession();
+      const loggedIn = !!session;
+
+      loginPanel.hidden = loggedIn;
+      dashboard.hidden = !loggedIn;
+
+      if (loggedIn) await loadAnnouncements();
+    }
+
+    document.getElementById("loginForm").addEventListener("submit",
+      async event => {
+        event.preventDefault();
+        loginButton.disabled = true;
+        showStatus("Signing in…");
+
+        const { error } = await supabase.auth.signInWithPassword({
+          email: document.getElementById("email").value.trim(),
+          password: document.getElementById("password").value
+        });
+
+        loginButton.disabled = false;
+
+        if (error) {
+          showStatus("Sign-in failed. Check your email, password and Supabase Auth settings.");
+          return;
+        }
+
+        document.getElementById("password").value = "";
+        showStatus("Signed in.");
+        await refresh();
+      }
+    );
+
+    document.getElementById("logoutButton").addEventListener("click",
+      async () => {
+        await supabase.auth.signOut();
+        showStatus("Signed out.");
+        await refresh();
+      }
+    );
+
+    document.getElementById("announcementForm").addEventListener("submit",
+      async event => {
+        event.preventDefault();
+        publishButton.disabled = true;
+        showStatus("Publishing…");
+
+        const { error } = await supabase
+          .from("announcements")
+          .insert({
+            title: document.getElementById("title").value.trim(),
+            content: document.getElementById("content").value.trim(),
+            category: document.getElementById("category").value,
+            published: true
+          });
+
+        publishButton.disabled = false;
+
+        if (error) {
+          showStatus("Could not publish: " + error.message);
+          return;
+        }
+
+        document.getElementById("announcementForm").reset();
+        showStatus("Announcement published successfully!");
+        await loadAnnouncements();
+      }
+    );
+
+    async function loadAnnouncements() {
+      list.textContent = "Loading…";
+
+      const { data, error } = await supabase
+        .from("announcements")
+        .select("id, title, content, category, created_at")
+        .eq("published", true)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        list.textContent = "Could not load announcements: " + error.message;
+        return;
+      }
+
+      list.replaceChildren();
+
+      if (!data.length) {
+        list.textContent = "No published announcements yet.";
+        return;
+      }
+
+      for (const item of data) {
+        const article = document.createElement("article");
+        article.className = "item";
+
+        const heading = document.createElement("h3");
+        heading.textContent = item.title;
+
+        const category = document.createElement("small");
+        category.className = "muted";
+        category.textContent = item.category;
+
+        const message = document.createElement("p");
+        message.textContent = item.content;
+
+        const date = document.createElement("small");
+        date.className = "muted";
+        date.textContent = new Date(item.created_at).toLocaleString();
+
+        article.append(heading, category, message, date);
+        list.append(article);
+      }
+    }
+
+    refresh();
+  }
+</script>
+</body>
+    </html>
+    
