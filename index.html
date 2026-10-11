@@ -757,7 +757,8 @@
         </div>
 
 
-        <div class="announcement-list">
+        <div id="announcementList" class="announcement-list">
+    <p style="color:#9da7bd;">Loading announcements...</p>
 
 
             <article class="announcement">
@@ -891,3 +892,58 @@
 
                 <p>
                     VENOMDOLL is the first art
+                    
+<script>
+(async function () {
+  const list = document.getElementById("announcementList");
+  const url = "https://yugszbinzeudfdnxajsx.supabase.co";
+
+  // Use the same publishable key already used in admin.html.
+  const key = "PASTE_YOUR_EXISTING_PUBLISHABLE_KEY_HERE";
+
+  try {
+    const response = await fetch(
+      url + "/rest/v1/announcements?select=title,content,category,created_at&published=eq.true&order=created_at.desc",
+      {
+        headers: {
+          apikey: key,
+          Authorization: "Bearer " + key
+        }
+      }
+    );
+
+    if (!response.ok) throw new Error("Load failed");
+
+    const items = await response.json();
+    list.replaceChildren();
+
+    if (!items.length) {
+      list.textContent = "No announcements published yet.";
+      return;
+    }
+
+    items.forEach(item => {
+      const card = document.createElement("article");
+      card.className = "announcement";
+
+      const category = document.createElement("div");
+      category.className = "announcement-date";
+      category.textContent = item.category || "Official";
+
+      const title = document.createElement("h3");
+      title.textContent = item.title;
+
+      const content = document.createElement("p");
+      content.style.whiteSpace = "pre-line";
+      content.textContent = item.content;
+
+      card.append(category, title, content);
+      list.appendChild(card);
+    });
+  } catch (error) {
+    console.error(error);
+    list.textContent = "Announcements couldn't load. Please try again.";
+  }
+})();
+</script>
+                    
